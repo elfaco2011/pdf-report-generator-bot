@@ -45,14 +45,28 @@ def _ensure_demo_input() -> None:
 
 
 def _load_table(input_path: Path):
+    """Return header, rows fitted to the header width, and line numbers of rejected rows.
+
+    Short rows are padded with empty cells. Extra cells are dropped when empty;
+    rows whose extra cells hold data are rejected.
+    """
+    rows = []
+    rejected = []
     with input_path.open(newline="") as f:
         reader = csv.reader(f)
         try:
             header = next(reader)
         except StopIteration:
-            return [], []
-        rows = [row for row in reader]
-    return header, rows
+            return [], [], []
+        size = len(header)
+        for row in reader:
+            if len(row) > size:
+                if any(cell.strip() for cell in row[size:]):
+                    rejected.append(reader.line_num)
+                    continue
+                row = row[:size]
+            rows.append(row + [""] * (size - len(row)))
+    return header, rows, rejected
 
 
 def _build_pdf(header, rows, output_path: Path) -> None:
@@ -83,10 +97,15 @@ def run() -> None:
         logging.error("Input file not found: %s", args.input)
         sys.exit(1)
 
-    header, rows = _load_table(args.input)
+    header, rows, rejected = _load_table(args.input)
     if not header:
         logging.warning("Input is empty, nothing to render.")
         return
+    if rejected:
+        logging.warning(
+            "%d row(s) have more columns than the header and were left out of the report (lines: %s)",
+            len(rejected), ", ".join(map(str, rejected)),
+        )
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     _build_pdf(header, rows, args.output)

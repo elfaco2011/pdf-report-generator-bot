@@ -35,5 +35,6 @@ python src/main.py --input path/to/table.csv --output path/to/report.pdf
 If the file is missing and no `--input` is given, the script recreates it before running.
 
 ## Adapting it to your data
-Pass any CSV table with `--input`: header in the first row, same number of columns in every row.
+Pass any CSV table with `--input`, with the header in the first row.
+Short rows are padded with empty cells. Rows with more columns than the header are left out of the report, with a warning listing their line numbers; extra columns that are empty are simply dropped.
 The title is fixed to "Sales Report"; change that string in `src/main.py` for other reports.
