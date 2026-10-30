@@ -60,7 +60,7 @@ def _build_pdf(header, rows, output_path: Path) -> None:
     styles = getSampleStyleSheet()
 
     data = [header] + rows
-    table = Table(data)
+    table = Table(data, repeatRows=1)
     table.setStyle(
         TableStyle(
             [
