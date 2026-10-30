@@ -1,43 +1,33 @@
-# Automated PDF Report Generation Bot
+# PDF Report Generator Bot
 
-## 🔍 Problem
-Generating reports manually from structured data is repetitive and inefficient, especially when reports need to be produced frequently or at scale.
+## Problem
+Turning a CSV table into a clean, printable PDF report by hand is repetitive.
 
-## ✅ Solution
-This Python automation bot generates clean, structured PDF reports from input data, enabling fast and consistent report creation.
+## Example output
+Generated from `examples/sample_input.csv` (full file: `examples/sample_output.pdf`):
 
-## 🚀 Features
-- Reads `examples/sample_input.csv` with tabular data.
-- Builds a styled table (header row, grid lines, basic alignment).
-- Outputs a one-page PDF to `examples/sample_output.pdf`.
+![Sample PDF report](docs/sample_output.png)
 
-## 🛠 Tech Stack
-- Python
-- PDF generation
-- Data processing
-- Automation workflows
+## What it does
+- Reads a CSV file; the first row is used as the table header.
+- Renders all rows as a table on an A4 page, with a grey header row, grid lines and centred cells.
+- Adds the title "Sales Report" above the table.
+- Writes the result to `examples/sample_output.pdf`.
 
-## How to run (DEMO)
+Values are printed as they appear in the CSV: no totals, sorting or number formatting.
+
+## Quick start
+Tested with Python 3.11.
+
 ```bash
-cd pdf-report-generator-bot
+pip install -r requirements.txt
 python src/main.py
 ```
 
-The bot will create a demo `sample_input.csv` with a few rows if needed.
+## Sample data
+`examples/sample_input.csv` contains three customers with country and revenue.
+If the file is missing, the script recreates it before running.
 
-## 🎯 Use Cases
-- Business reporting
-- Automated analytics reports
-- Client-ready PDF exports
-
-## Inputs & outputs
-- **Input:** `examples/sample_input.csv` (any simple table).
-- **Output:** `examples/sample_output.pdf` (PDF report).
-
-## Dependencies
-- Python 3.x
-- `reportlab` (install with `pip install reportlab`).
-
-## 📦 Ready-made Automation Pack
-Looking for a plug-and-play reporting solution?
-👉 https://khalidelfakir.gumroad.com
+## Adapting it to your data
+Replace `examples/sample_input.csv` with any CSV table (header in the first row, same number of columns in every row).
+To change the title or the file paths, edit the `"Sales Report"` string and `INPUT_PATH` / `OUTPUT_PATH` in `src/main.py`.
